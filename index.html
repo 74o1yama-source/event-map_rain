@@ -18,14 +18,14 @@ html, body {
 }
 
 #map {
-  height: 65vh;   /* ← 上65% */
+  height: 70vh;   /* ← 上65% */
   background-color: black;
   touch-action: pan-y;
 }
 
 
 #checked-list {
-  height: 35vh;   /* ← 下35% */
+  height: 30vh;   /* ← 下35% */
   overflow-y: auto;
   background: rgba(255,255,255,0.95);
 }
@@ -650,19 +650,70 @@ function showBlinkMarkerById(id) {
 }
 
 
- 
+// ★ 元の中心保存用（← 外に出す！！）
+let originalCenter = null;
+let originalZoom   = null;
+
 L.geoJSON(outdoorBooths, {
+
   pointToLayer: (f, ll) =>
     L.marker(ll, {
       icon: L.divIcon({
         className: "star-marker",
-        html: '<span style="font-size:30px; color:#000000; font-weight:bold;"></span>',
+        html: '<span style="font-size:30px; color:#000000; font-weight:bold;"> </span>',
         iconSize: [36, 36],
         iconAnchor: [18, 18]
       })
     }),
-  onEachFeature: (f, l) =>
-    l.bindPopup(popupBase(f.properties))
+
+  onEachFeature: (f, l) => {
+
+    l.on("click", () => {
+
+      // ★ 現在位置保存
+      originalCenter = map.getCenter();
+      originalZoom   = map.getZoom();
+
+      // ★ popup表示
+      L.popup({
+        autoPan: false
+      })
+        .setLatLng(l.getLatLng())
+        .setContent(popupBase(f.properties))
+        .openOn(map);
+
+      // ★ 中央補正
+      setTimeout(() => {
+
+        const popupEl = document.querySelector(".leaflet-popup");
+        if (!popupEl) return;
+
+        const popupRect = popupEl.getBoundingClientRect();
+        const mapRect   = map.getContainer().getBoundingClientRect();
+
+        const popupCenterY = popupRect.top + popupRect.height / 2;
+        const mapCenterY   = mapRect.top + mapRect.height / 2;
+
+        const diffY = popupCenterY - mapCenterY;
+
+        map.panBy([0, diffY], { animate: true });
+
+      }, 50);
+
+      // ★ 閉じたら戻す
+      map.once("popupclose", () => {
+        if (originalCenter) {
+          map.flyTo(originalCenter, originalZoom, {
+            animate: true,
+            duration: 0.4
+          });
+        }
+      });
+
+    });
+
+  }
+
 }).addTo(outdoorLayer);
 
 
