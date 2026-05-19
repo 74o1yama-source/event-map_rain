@@ -709,23 +709,28 @@ L.geoJSON(outdoorBooths, {
         .setContent(popupBase(f.properties))
         .openOn(map);
 
-      // ★ 中央補正
-      setTimeout(() => {
+  // ★ 中央補正
+         setTimeout(() => {
 
-        const popupEl = document.querySelector(".leaflet-popup");
-        if (!popupEl) return;
+      const popupEl = document.querySelector(".leaflet-popup");
+      if (!popupEl) return;
 
-        const popupRect = popupEl.getBoundingClientRect();
-        const mapRect   = map.getContainer().getBoundingClientRect();
+      const popupRect = popupEl.getBoundingClientRect();
+      const mapRect   = map.getContainer().getBoundingClientRect();
 
-        const popupCenterY = popupRect.top + popupRect.height / 2;
-        const mapCenterY   = mapRect.top + mapRect.height / 2;
+      // ★ Y方向
+      const popupCenterY = popupRect.top + popupRect.height / 2;
+      const mapCenterY   = mapRect.top + mapRect.height / 2;
+      const diffY = popupCenterY - mapCenterY;
 
-        const diffY = popupCenterY - mapCenterY;
+      // ★ X方向（追加）
+      const popupCenterX = popupRect.left + popupRect.width / 2;
+      const mapCenterX   = mapRect.left + mapRect.width / 2;
+      const diffX = popupCenterX - mapCenterX;
 
-        map.panBy([0, diffY], { animate: true });
-
-      }, 50);
+      // ★ 両方向移動
+      map.panBy([diffX, diffY], { animate: true });
+}, 50);
 
       // ★ 閉じたら戻す
       map.once("popupclose", () => {
