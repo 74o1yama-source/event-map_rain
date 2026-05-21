@@ -24,6 +24,7 @@ html, body {
   position: relative;
 }
 
+
 #map-instruction {
   position: absolute;
   top: 10px;
@@ -44,7 +45,7 @@ html, body {
 
 
 #checked-list {
-  height: 25vh;   /* ← 下20% */
+  height: 25vh;   /* ← 下35% */
   overflow-y: auto;
   background: rgba(255,255,255,0.95);
 }
@@ -53,17 +54,18 @@ html, body {
 #checked-list .title {
   display: flex;
   align-items: center;
+  gap: 8px; 
   font-weight: bold;
   margin-bottom: 5px;
   font-size: 15px;
 }
 
-#clear-all-btn {
-  margin-left: 5px;
-}
-
 .nav-links {
   margin-left: auto;
+}
+
+#clear-all-btn {
+  margin-left: 8px;
 }
 
 
@@ -87,17 +89,41 @@ html, body {
   border-bottom: 1px solid #ddd;
 }
 
-#clear-all-btn {
-  margin-left: auto;
-  background: #555;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding:4px 8px;
+#clear-all-btn,
+.nav-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 20px;
+  padding: 0 10px;
   font-size: 12px;
-  line-height: 1;  
+  line-height: 1;
+
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  background: #555;   /* ←一括削除と同じ色にするなら */
+  color: #fff;
+
+  text-decoration: none;  /* ←アンダーバー消す */
+  border: none;
   cursor: pointer;
 }
+
+.nav-links a {
+  background: #1d6fdc;  /* 青 */
+}
+
+#clear-all-btn {
+  background: #555;     /* グレー */
+}
+
+#clear-all-btn:active,
+.nav-links a:active {
+  background: inherit;  /* ←押しても色変えない */
+}
+
 
 #clear-all-btn:hover {
   background: #333;
@@ -108,7 +134,7 @@ html, body {
   color: #fff;
   border: none;
   border-radius: 4px;
-  padding: 4px 8px;
+  padding: 2px 8px;
   font-size: 12px;
   cursor: pointer;
 }
@@ -190,20 +216,8 @@ html, body {
   }
 
 .nav-links {
-  margin-left: 15px;
-}
-
-
-.nav-links a {
-  display: inline-block;
-  padding: 4px 8px;   /* ← 一括解除と同じ */
-  font-size: 12px;    /* ← 同じサイズ */
-  background: #1d6fdc;   /* ← 色も合わせるなら */
-  color: #fff;
-  text-decoration: none;
-  line-height: 1;  
-  border: none;
-  border-radius: 4px; /* ← 少し小さく */
+  display: flex;
+  align-items: center;
 }
 
 .nav-links a.secondary {
