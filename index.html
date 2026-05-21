@@ -93,8 +93,9 @@ html, body {
   color: #fff;
   border: none;
   border-radius: 4px;
-  padding: 4px 8px;
+  padding:4px 8px;
   font-size: 12px;
+  line-height: 1;  
   cursor: pointer;
 }
 
@@ -152,22 +153,25 @@ html, body {
   z-index: 1000;
   background: #1d6fdc;
   color: #fff;
-  padding: 6px 10px;
+  padding: 4px 8px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 12px;
+  transition: opacity 0.6s ease-out;
 }
 
 /* 説明（初期は非表示） */
 #map-instruction {
-  display: none; /* ←重要 */
+  display: none;
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
   position: absolute;
   top: 50px;
   left: 10px;
   background: rgba(0,0,0,0.7);
   color: #fff;
-  padding: 8px;
-  border-radius: 8px;
+  padding: 6px;
+  border-radius: 6px;
   font-size: 12px;
   z-index: 1000;
 }
@@ -197,6 +201,8 @@ html, body {
   background: #1d6fdc;   /* ← 色も合わせるなら */
   color: #fff;
   text-decoration: none;
+  line-height: 1;  
+  border: none;
   border-radius: 4px; /* ← 少し小さく */
 }
 
@@ -223,7 +229,7 @@ html, body {
 <div class="title">
   <span>✅ チェックしたブース</span>
   <div class="nav-links">
-    <a href="booth_detail.html">📋ブース一覧＆実演時間</a>
+    <a href="booth_detail.html">ブース一覧＆実演時間</a>
   </div>
   <button id="clear-all-btn">一括解除</button>
 </div>
@@ -374,26 +380,46 @@ function loadChecked() {
   });
 }
 
+
 const btn = document.getElementById("toggle-instruction-btn");
 const box = document.getElementById("map-instruction");
 
-let timer = null; // タイマー保持
+let timer = null;
 
 btn.addEventListener("click", () => {
+
+  // 手動閉じる
+  if (box.style.display === "block" && box.style.opacity === "1") {
+    fadeOut();
+    return;
+  }
 
   // 表示
   box.style.display = "block";
 
-  // 既存タイマーをクリア（連打対策）
+  setTimeout(() => {
+    box.style.opacity = "1";
+  }, 10);
+
+  btn.textContent = "✖ 閉じる";
+
   if (timer) clearTimeout(timer);
 
-  // ✅ 8秒後に自動で消える
+  // ✅ 少し止めてからフェード開始（ここが自然さのコツ）
   timer = setTimeout(() => {
+    fadeOut();
+  }, 7000); // ←9秒後に開始 → 1秒かけて消える
+});
+
+// フェードアウト関数
+function fadeOut() {
+  box.style.opacity = "0";
+
+  setTimeout(() => {
     box.style.display = "none";
     btn.textContent = "ℹ️ 操作説明";
-  }, 8000);
-
-});
+  }, 600); // ←CSSと合わせる
+}
 
 
 /* =========================================
