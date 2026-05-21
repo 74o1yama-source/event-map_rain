@@ -377,12 +377,25 @@ function loadChecked() {
 const btn = document.getElementById("toggle-instruction-btn");
 const box = document.getElementById("map-instruction");
 
+let timer = null; // タイマー保持
+
 btn.addEventListener("click", () => {
-  if (box.style.display === "none") {
-    box.style.display = "block";
-  } else {
+
+  // 表示
+  box.style.display = "block";
+
+  // ボタン表示変更（任意）
+  btn.textContent = "✖ 閉じる";
+
+  // 既存タイマーをクリア（連打対策）
+  if (timer) clearTimeout(timer);
+
+  // ✅ 10秒後に自動で消える
+  timer = setTimeout(() => {
     box.style.display = "none";
-  }
+    btn.textContent = "ℹ️ 操作説明";
+  }, 10000);
+
 });
 
 
